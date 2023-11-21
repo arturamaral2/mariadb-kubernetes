@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+  namespace: mariadb
+data:
+  my.cnf: |
+    [mysqld]
+    server-id=1
+    log-bin
+    binlog_format=ROW
+    enforce-gtid-consistency
+    master-info-repository=TABLE
+    relay-log-info-repository=TABLE
+    gtid-mode=on
+    log-slave-updates=on
+    auto-increment-increment=2
+    auto-increment-offset=1

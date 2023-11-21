@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  serviceName: mariadb
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mariadb-storage  # Use the name of your PVC here
+      containers:
+        - name: mariadb
+          image: mariadb:latest
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mariadb-storage
+
